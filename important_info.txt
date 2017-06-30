@@ -1,5 +1,0 @@
-I did not use a small subsection of the data. 
-Instead, I only looked at the first 10,000 tags.
-
-There is a TEXT file with the first 10,000 tags called new-delhi_sample.txt.
-So, while the method was different, the intent and goal were the same!
