@@ -1,5 +1,9 @@
 # Project - Scraping US Air Traffic Data
 
+## Instructions
+* Run the IPython Notebook (with the .ipynb extension) to go along step-by-step with the code
+* View the file within 'Final output' for an HTML version of the above  
+
 ## Overview
 As part of my own research, fuelled by Udacity's course content on Data Wrangling, 
 I decided to make use of my new-found skills to scrap a lot of the data of the US Bureau 
