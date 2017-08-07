@@ -7,6 +7,12 @@ from a deck.
 
 Other statistics and plots of the draw are also shown.
 
+## Topics
+* Measures of Central Tendency
+* Measures of Variability
+* Central Limit Theorem
+* Outliers
+
 ## Techniques
 * Data Manipulation
 * Data Visualization
