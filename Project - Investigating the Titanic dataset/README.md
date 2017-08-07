@@ -1,7 +1,10 @@
 # Project - Investigating the Titanic dataset
 
-## Overview
+## Instructions
+* Run the IPython Notebook (with the .ipynb extension) to go along step-by-step with the code
+* View the file within 'Final output' for an HTML version of the above
 
+## Overview
 A partial record of the passengers on the Titanic gives key insight into certain observations and results, which have been visualized throughout using bar charts, histograms and scatter plots. 
 
 ## Techniques
