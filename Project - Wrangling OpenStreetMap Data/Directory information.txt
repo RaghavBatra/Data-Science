@@ -1,0 +1,18 @@
+CONTENTS OF REPOSITARY
+
+* python_functions: 
+	- 3 functions used to audit the data (separately)
+	- 1 function that does the actual conversion
+
+* osmconvert64, command-line tool to convert from .PBF to .OSM
+
+* Final output
+	- HTML file containing same data as Jupyter Notebook file
+
+* Project.ipynb:
+	- Python notebook of everything done, answers to the rubric and reasoning, 
+	including code stored above
+
+* schema_osm.py:
+	- schema for converted data to adhere to
+
