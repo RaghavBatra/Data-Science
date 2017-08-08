@@ -1,0 +1,10 @@
+(lp0
+S'salary_bonus'
+p1
+aS'high_from_to'
+p2
+aS'salary'
+p3
+aS'long_term_incentive'
+p4
+a.

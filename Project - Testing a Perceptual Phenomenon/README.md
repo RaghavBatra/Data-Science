@@ -15,6 +15,7 @@ Statistics and visualizations were calculated using R.
  
 ## R libraries used
 * ggplot2
+* plyr
 
 ## References
 * <a href = "https://en.wikipedia.org/wiki/Stroop_effect">Stroop effect (Wikipedia) </a>
