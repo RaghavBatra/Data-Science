@@ -26,7 +26,7 @@ almost all projects use all data analysis techniques, some techniques are used
 more often or are the focus of the projects. These are mentioned in bold in 
 parenthesis.
 
-Projects done during the course:
+*Projects done during the course:*
 * Investigating the Titanic dataset (**INVESTIGATING DATA**)
 * Wrangling OpenStreetMap Data (**DATA WRANGLING & CLEANING**)
 * Determining Factors Responsible for Red Wine Quality (**EXPLORATORY DATA ANALYSIS**)
@@ -35,7 +35,7 @@ Projects done during the course:
 * Creating a Story in Tableau (**VISUALIZATION**)
 * Detecting Fraud at Enron (**MACHINE LEARNING**)
 
-Extra projects undertaken:
+*Extra projects undertaken:*
 * Scraping US Air Traffic Data (**WEB SCRAPING**)
 * Analyzing Amazon.com Reviews (**MACHINE LEARNING & NLP**)
 * Scraping Amazon.com Ratings (**MACHINE LEARNING & NLP**)
