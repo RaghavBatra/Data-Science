@@ -1,0 +1,353 @@
+---
+title: "Test A Perceptual Phenomenon"
+author: "Raghav"
+date: "19 July 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+TEST A PERCEPTUAL PHENOMENON
+========================================================
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+
+library(ggplot2)
+library(plyr)
+
+setwd('C:/Users/Raghav/Desktop/Data Analyst Nanodegree/Project - Test A Perceptual Phenomenon')
+
+stroop = read.csv('stroopdata.csv')
+
+```
+
+
+### 1. Declaring the variables
+
+We want to measure how the type of the Stroop experimental condition (Congruent/Incongruent) affects the time taken to name all the ink colors.
+
+Therefore, our independent variable would be **the Stroop experiment condition**.
+
+Our dependent variable, then, would be  **the time taken to complete the tasks in the experiment condition (name all the ink colors)**.
+
+
+### 2. Hypothesis and statistical test
+
+#### Hypothesis
+
+With our definition of the independent and dependent variables above, our hypothesis would check, we want to see if there is an increase in the time taken in the Incongruent experimental condition.
+
+Let the means for the time taken for the Congruent and Incongruent experimental condition be $\mu_{C}$ and $\mu_{I}$ respectively.
+
+Our null hypothesis would argue that there is no change or a significant increase in the time taken in the Congruent condition than in the Incongruent condition.
+
+Therefore, our null hypothesis, $H_{0}$ would be: $\mu_{C} \ge \mu_{I}$.
+
+Our alternate hypothesis would argue that there the time taken in the Congruent condition is significantly less than the time taken in the Incongruent condition.
+
+Thus, our alternate hypothesis, $H_{A}$ would be: $\mu_{C} < \mu_{I}$.
+
+#### Statistical test
+
+Since we comparing **differences in means** of the same individuals (**related groups**) who were in both conditions and all we have to begin with is a **sample** of 24 people, we should proceed with the *dependent t-test/paired samples t-test*.
+
+There are several assumptions that must be fulfilled inorder for us to use this t-test:
+
+1. **Scale of measurement** applied to the data collected follows a continuous scale.
+*This is true since the time recorded is measured in seconds (from 0 to 30 seconds), which is a continous variable.*
+
+2. The data is collected from a **representative, randomly selected portion of the total population**. *This is true, by assumption.*
+
+3. The plotted data APPROXIMATELY results in a **normal distribution bell-shaped** distribution curve.
+*Let us check this. Let us plot the graphs for both groups.*
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = stroop, aes(x = Congruent)) +
+  geom_histogram(binwidth = 1, fill = I('lightblue'), color = I('black'), aes(y = ..density.. )) +
+  stat_function(fun = dnorm, colour = I('black'), size = 2,
+                args = list(mean = mean(stroop$Congruent, na.rm = TRUE),
+                           sd = sd(stroop$Congruent, na.rm = TRUE))) +
+  geom_vline(xintercept = mean(stroop$Congruent), size = 3, color = I('blue')) +
+  scale_y_continuous(breaks = seq(0, 0.20, (1/24)), labels = function(x) x * 24) +
+  ylab('Count')
+```
+
+The blue line represents the mean value.
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = stroop, aes(x = Incongruent)) +
+  geom_histogram(binwidth = 1, fill = I('orange'), color = I('black'), aes(y = ..density.. )) +
+  stat_function(fun = dnorm, colour = I('black'), size = 2,
+                args = list(mean = mean(stroop$Incongruent, na.rm = TRUE),
+                           sd = sd(stroop$Incongruent, na.rm = TRUE))) +
+  geom_vline(xintercept = mean(stroop$Incongruent), size = 3, color = I('red')) +
+  scale_y_continuous(breaks = seq(0, 0.20, (1/24)), labels = function(x) x * 24) +
+  ylab('Count')
+```
+
+The red line represents the mean value.
+
+While, these look normally distributed, we can confirm this fact analytically using the
+Shapiro-Wilk test (checks normality; statistically significant levels mean that the data is **NOT** normally distributed).
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+shapiro.test(stroop$Congruent)
+
+```
+
+The p-value for the Congruent data is *MUCH* greater than 0.05, which means the result is not statistically significant. Thus, the data is normally distributed.
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+shapiro.test(stroop$Incongruent)
+
+```
+
+The p-value for the Incongruent data is lower than 0.05, which means the result is statistically significant. However, the point to notice here is that we need an APPROXIMATELY normal curve, and this data would fail to be statistically significant at lower levels (0.001). Thus, while the result is not as promising, we can still take this data to be normally distributed for our purposes.
+
+*Thus, the data is normally distributed.*
+
+
+4. A **large sample size** is used. *This is true, also by assumption.*
+
+5.There should be no significant outliers. *Outliers are any points 1.5 x IQR below Q1 or 1.5 IQR above Q3. Let us check this.*
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+outliers_Congruent = 1.5 * IQR(stroop$Congruent)
+
+normal_values = c(quantile(stroop$Congruent)[2] - outliers_Congruent, quantile(stroop$Congruent)[4] +outliers_Congruent)
+
+
+paste(normal_values)
+
+```
+The above is the 'normal' range for values in this dataframe.
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+min_max = c(min(stroop$Congruent), max(stroop$Congruent))
+
+paste(min_max)
+```
+These are the minimum and maximum values in this dataframe.
+It is apparent from this that there are no outliers in the Congruent dataframe
+
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+outliers_Incongruent = 1.5 * IQR(stroop$Incongruent)
+
+normal_values = c(quantile(stroop$Incongruent)[2] - outliers_Incongruent, quantile(stroop$Incongruent)[4] + outliers_Incongruent)
+
+
+paste(normal_values)
+
+```
+The above is the 'normal' range for values in this dataframe.
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+min_max = c(min(stroop$Incongruent), max(stroop$Incongruent))
+
+paste(min_max)
+```
+These are the minimum and maximum values in this dataframe.
+
+It is apparent from this that there is atleast one outlier (35.255) in the Incongruent dataframe, but this is a minor outlier and **NOT** significant.
+
+*Hence, there are no outliers.*
+
+**Thus, this t-test can be used.**
+
+
+### 3. Looking at the data
+
+Let us look at this data a little more closely.
+We already looked at the plots of both datasets (Congruent & Incongruent) above.
+Let us look at some other data. 
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+summary(stroop)
+```
+
+CENTRAL TENDENCY:
+
+a. Mean:
+  Congruent: 14.05
+  Incongruent: 22.02
+  
+b. Median:
+  Congruent: 14.36
+  Incongruent: 21.02
+  
+VARIABILITY:
+
+a. Range:
+  Congruent:
+  
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+range(stroop$Congruent)[2] - range(stroop$Congruent)[1]
+```
+  Incongruent:
+  
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+range(stroop$Incongruent)[2] - range(stroop$Incongruent)[1]
+```
+  
+b. Standard Deviation:
+  Congruent:
+  
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+sd(stroop$Congruent)
+```
+  Incongruent:
+  
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+sd(stroop$Incongruent)
+```
+
+### 4. Visualizations
+
+As mentioned, these were already created above. Here, I recreate them for convenience.
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = stroop, aes(x = Congruent)) +
+  geom_histogram(binwidth = 1, fill = I('lightblue'), color = I('black'), aes(y = ..density.. )) +
+  stat_function(fun = dnorm, colour = I('black'), size = 2,
+                args = list(mean = mean(stroop$Congruent, na.rm = TRUE),
+                           sd = sd(stroop$Congruent, na.rm = TRUE))) +
+  geom_vline(xintercept = mean(stroop$Congruent), size = 3, color = I('blue')) +
+  scale_y_continuous(breaks = seq(0, 0.20, (1/24)), labels = function(x) x * 24) +
+  ylab('Count')
+```
+
+The blue line represents the mean value.
+
+It seems apart from the bar at 15, the data is pretty normally distributed.
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = stroop, aes(x = Incongruent)) +
+  geom_histogram(binwidth = 1, fill = I('orange'), color = I('black'), aes(y = ..density.. )) +
+  stat_function(fun = dnorm, colour = I('black'), size = 2,
+                args = list(mean = mean(stroop$Incongruent, na.rm = TRUE),
+                           sd = sd(stroop$Incongruent, na.rm = TRUE))) +
+  geom_vline(xintercept = mean(stroop$Incongruent), size = 3, color = I('red')) +
+  scale_y_continuous(breaks = seq(0, 0.20, (1/24)), labels = function(x) x * 24) +
+  ylab('Count')
+```
+
+The red line represents the mean value.
+
+It seems that, once again, there is a peak at 25. Apart from that, there is a significant gap between 26 and 34, which is probably responsible for the deviation from 'normality' for this plot.
+
+
+### 5. Performing the statistical test
+
+We will perform a one-tailed t-test, because we want to see if there is an increase in the time taken in the Incongruent experimental condition.
+
+The difference between the 2 means, $\mu_{C} - \mu_{I} $ is:
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+stroop$diff = stroop$Congruent - stroop$Incongruent
+
+x_bar = round(mean(stroop$diff), 3)
+
+print(x_bar)
+
+```
+Note that the difference is **negative** because on average, it takes more time in the Incongruent experimental condition.
+
+The standard deviation, $\sigma$, of the sample is:
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+s = round(sd(stroop$diff), 3)
+
+print(s)
+```
+
+The degrees of freedom, $df$, are:
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+n = nrow(stroop)
+
+df = n - 1
+
+print(df)
+
+```
+
+The sample error, $s$, is:
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+se = round(s/sqrt(n), 3)
+print(se)
+
+```
+
+
+The t-statistic is:
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+t_statistic = round(x_bar/se, 3)
+
+print(t_statistic)
+
+```
+
+The t-critical value for a one-tailed test an $\alpha$ level (*p-value*) of 0.05 is:  
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+t_critical = 1.714
+
+print(-t_critical)
+
+```
+
+Our t-statistic is much larger in magnitude than the t-critical value! 
+Using GraphPad, the significance is less than 0.0001!
+
+This implies that our result is statistically significant, and we thus **reject the null**!
+
+This implies that participants in the Congruent condition took significant less time than those in the Incongruent condition.
+
+Therefore, the type of the experimental condition had a casual effect on the time taken.
+
+This is very much believable: our brains find it much easier to comprehend words that are the same color the text reads (*semantic facilitation*). Reading written word colors in different colors than the text may our brains work much harder (*Stroop asynchrony*).  
+
+The 95% confidence intervals for this data is (number of differences):
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+ci = t_critical * se
+
+ci_levels = c(x_bar - ci, x_bar + ci)
+
+print(ci_levels)
+```
+
+This was the mean difference in my scores:
+
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
+my_results = c(16.44, 34.91)
+my_results[1] - my_results[2]
+```
+
+This value is alarmingly high! Some reasons for this could be:
+1. I didn't take the test in a quiet 'experiment' room
+2. I was cognizant of some facts about the experiment beforehand
+
+### 6. Reason for effects
+
+There are several reaons for the lag in times taken:
+
+1. **Processing speed**: there is a lag in the brain's ability to recognize the color of the word since the brain reads words faster than it recognizes colors. This is based on the idea that *word processing is significantly faster than color processing*. In a condition where there is a conflict regarding words and colors, if the task is to report the color, the word information arrives at the decision-making stage before the color information which presents processing confusion. 
+
+2. **Selective attention**: color recognition as opposed to reading a word, requires more attention, the brain needs to use more attention to recognize a color than to word encoding, so it takes a little longer.
+
+3. **Automaticity**
+This theory is the most common theory of the Stroop effect.[17][not in citation given] It suggests that since recognizing colors is not an "automatic process" there is hesitancy to respond; whereas, *the brain automatically understands the meaning of words as a result of habitual reading*. 
+
+Related to the standard Stroop effect, the emotional Stroop test works by examining the response time of the participant to name colors of negative emotional words. For example, depressed participants will be slower to say the color of depressing words rather than non-depressing words. Non-clinical subjects have also been shown to name the color of an emotional word (e.g., "war", "cancer", "kill") slower than naming the color of a neutral word (e.g., "clock", "lift", "windy").
+
+### References
+1. https://en.wikipedia.org/wiki/Stroop_effect
+2. https://en.wikipedia.org/wiki/Emotional_Stroop_test
+
