@@ -13,7 +13,6 @@ To that extent, the aim of this massive project was to predict persons of intere
 The final precision and recall were 0.33 & 0.45 respectively, well above the 0.3 limit set as a cutoff
 
 ## Topics
-* Supervised Machine Learning
 * Naive Bayes
 * Decision Trees
 * Random Forests
@@ -25,7 +24,7 @@ The final precision and recall were 0.33 & 0.45 respectively, well above the 0.3
 * Parameter Tuning
 
 ## Techniques
-* Data Manipulation
+* Machine Learning
 * Data Visualization
  
 ## Python libraries used
